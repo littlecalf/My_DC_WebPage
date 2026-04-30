@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>前往會員中心...</title>
+    <title>Find the Key</title>
     <style>
+        /* 基礎設定 */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background-color: #000; /* 黑邊區域 */
+            background-color: #000;
             position: relative;
         }
 
+        /* 圖片容器 */
         .image-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* 請替換成你的圖片網址 */
-            background-image: url('BOT_TESTING.jpg'); 
+            background-image: url('你的圖片網址.jpg'); /* !!! 替換 1/2 !!! */
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
@@ -30,106 +31,150 @@
             filter: brightness(90%);
         }
 
+        /* 慢速呼吸動畫 */
         @keyframes breath {
             0% { opacity: 0.05; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.35; } /* 稍微加亮一點點點，比較不會找不到 */
             100% { opacity: 0.05; }
         }
 
+        /* 按鈕樣式 */
         #random-btn {
             position: absolute;
+            /* 關鍵：預設要是可見的 */
+            display: inline-block; 
+            
             background: none;
             border: none;
-            padding: 25px;
+            padding: 25px; /* 寬大的感應區 */
             margin: 0;
             outline: none;
-            font-size: 15px;
+            font-size: 16px;
             letter-spacing: 2px;
             color: #ffffff;
             font-weight: 300;
+            
+            /* 緩慢呼吸 8 秒 */
             animation: breath 8s infinite ease-in-out;
+            
             cursor: default; 
             z-index: 10;
             transition: all 0.8s;
             white-space: nowrap;
-            /* 初始隱藏，等計算好位置後再顯示，避免閃爍 */
-            display: none; 
         }
 
+        /* 滑鼠滑過時的彩蛋效果 */
         #random-btn:hover {
             animation: none;
             opacity: 1 !important;
-            color: #fff;
+            color: #fffa65; /* 變成亮黃色提示 */
             cursor: pointer;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 10px rgba(255, 250, 101, 0.8);
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-    <div class="image-container" id="bg-img"></div>
+    <!-- 圖片層 -->
+    <div class="image-container"></div>
+    
+    <!-- 按鈕層 (預設會在左上角，等待 JS 移動它) -->
     <button id="random-btn" onclick="goToLink()">Click</button>
 
     <script>
-        // 1. 先定義圖片的原始尺寸（這很重要，請填入你圖片的真實寬高）
-        // 如果不知道，程式碼下方有自動偵測的方法
-        const imgOriginalWidth = 1338; 
-        const imgOriginalHeight = 1176;
+        // 設定目的地網址
+        function goToLink() {
+            window.location.href = "https://www.google.com"; /* !!! 替換目的地 !!! */
+        }
 
-        function moveButton() {
-            const btn = document.getElementById('random-btn');
+        const btn = document.getElementById('random-btn');
+        const imgUrl = "BOT_TESTING.jpg"; /* !!! 替換 2/2 !!! */
+
+        // 核心定位函式
+        function placeButton(imgW, imgH) {
             const winW = window.innerWidth;
             const winH = window.innerHeight;
-
-            // 2. 計算 contain 模式下，圖片實際顯示的尺寸
-            const windowRatio = winW / winH;
-            const imageRatio = imgOriginalWidth / imgOriginalHeight;
-
-            let actualImgW, actualImgH, offsetX, offsetY;
-
-            if (windowRatio > imageRatio) {
-                // 視窗太寬，圖片高度撐滿，左右留黑邊
-                actualImgH = winH;
-                actualImgW = winH * imageRatio;
-                offsetX = (winW - actualImgW) / 2;
-                offsetY = 0;
-            } else {
-                // 視窗太窄，圖片寬度撐滿，上下留黑邊
-                actualImgW = winW;
-                actualImgH = winW / imageRatio;
-                offsetX = 0;
-                offsetY = (winH - actualImgH) / 2;
-            }
-
-            // 3. 在圖片實際區域內計算隨機位置
-            const padding = 40; // 距離圖片邊緣的距離
             const btnW = btn.offsetWidth;
             const btnH = btn.offsetHeight;
 
-            const randomX = offsetX + padding + Math.random() * (actualImgW - btnW - padding * 2);
-            const randomY = offsetY + padding + Math.random() * (actualImgH - btnH - padding * 2);
+            // 如果沒有抓到圖片尺寸，就用全螢幕作為備案
+            let targetAreaW = winW;
+            let targetAreaH = winH;
+            let offsetX = 0;
+            let offsetY = 0;
 
-            // 4. 套用位置並顯示
-            btn.style.left = randomX + 'px';
-            btn.style.top = randomY + 'px';
-            btn.style.display = 'block';
+            // 如果有圖片尺寸，計算 contain 區域
+            if (imgW && imgH) {
+                const windowRatio = winW / winH;
+                const imageRatio = imgW / imgH;
+
+                if (windowRatio > imageRatio) {
+                    // 視窗太寬，圖片高度撐滿，左右留黑
+                    targetAreaH = winH;
+                    targetAreaW = winH * imageRatio;
+                    offsetX = (winW - targetAreaW) / 2;
+                } else {
+                    // 視窗太窄，圖片寬度撐滿，上下留黑
+                    targetAreaW = winW;
+                    targetAreaH = winW / imageRatio;
+                    offsetY = (winH - targetAreaH) / 2;
+                }
+            }
+
+            // 在目標區域內計算隨機位置
+            const padding = 50; // 安全邊距
+            
+            // 隨機範圍必需大於 0
+            const rangeX = targetAreaW - btnW - padding * 2;
+            const rangeY = targetAreaH - btnH - padding * 2;
+
+            const finalX = offsetX + padding + (rangeX > 0 ? Math.random() * rangeX : 0);
+            const finalY = offsetY + padding + (rangeY > 0 ? Math.random() * rangeY : 0);
+
+            // 套用座標
+            btn.style.left = finalX + 'px';
+            btn.style.top = finalY + 'px';
         }
 
-        function goToLink() {
-            window.location.href = "https://www.google.com"; 
-        }
-
-        // 為了精確計算，我們等圖片載入後獲取其原始尺寸
+        // 建立臨時圖片物件來抓取原始尺寸
         const tempImg = new Image();
-        tempImg.src = "你的圖片網址.jpg"; // 這裡也要替換
+        let loadedImgW = 0;
+        let loadedImgH = 0;
+
         tempImg.onload = function() {
-            // 這裡會自動抓取圖片的寬高，不需要手動填寫了
-            window.imgOriginalWidth = this.width;
-            window.imgOriginalHeight = this.height;
-            moveButton();
+            // 圖片載入成功，紀錄尺寸並定位
+            loadedImgW = this.width;
+            loadedImgH = this.height;
+            placeButton(loadedImgW, loadedImgH);
         };
 
-        window.onresize = moveButton;
+        tempImg.onerror = function() {
+            // 如果圖片載入失敗，直接啟動安全備案定位
+            console.error("圖片載入失敗，啟用全螢幕隨機定位。");
+            placeButton(0, 0); 
+        };
+
+        // 開始載入圖片
+        tempImg.src = imgUrl;
+
+        // 當螢幕視窗大小改變時重新定位
+        let resizeTimer;
+        window.onresize = function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                // 使用紀錄好的圖片尺寸重新定位
+                placeButton(loadedImgW, loadedImgH);
+            }, 200);
+        };
+
+        // 為了防止 onload 沒觸發的保險：0.5 秒後不管有沒有載入都先定位一次
+        setTimeout(function() {
+            if (!loadedImgW) {
+                placeButton(0, 0);
+            }
+        }, 500);
+
     </script>
 </body>
 </html>
