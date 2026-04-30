@@ -5,69 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find the Hidden Key</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            background-color: #000;
-            position: relative;
-        }
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background-color: #000;
+        position: relative;
+    }
 
-        .image-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('BOT_TESTING.jpg'); 
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 1;
-            filter: brightness(90%);
-        }
+    .image-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('BOT_TESTING.jpg'); 
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 1;
+        filter: brightness(90%);
+    }
 
-        /* 呼吸燈動畫：從幾乎看不見到微弱可見 */
-        @keyframes breath {
-            0% { opacity: 0.1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 0.1; }
-        }
+    /* 緩慢的呼吸動畫 */
+    @keyframes breath {
+        0% { opacity: 0.05; }
+        50% { opacity: 0.2; } /* 最高亮度稍微調低一點，更神祕 */
+        100% { opacity: 0.05; }
+    }
 
-        /* 彩蛋按鈕樣式 */
-        #random-btn {
-            position: absolute;
-            background: none;
-            border: none;
-            padding: 20px; /* 增加點擊區域感應 */
-            margin: 0;
-            outline: none;
-            
-            /* 文字設定 */
-            font-size: 16px;
-            letter-spacing: 1px;
-            color: #ffffff;
-            font-weight: 300;
-            
-            /* 套用動畫：每 3 秒循環一次 */
-            animation: breath 3s infinite ease-in-out;
-            
-            cursor: default; 
-            z-index: 10;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
+    #random-btn {
+        position: absolute;
+        background: none;
+        border: none;
+        padding: 25px; /* 增加感應區，讓使用者比較好「撞到」它 */
+        margin: 0;
+        outline: none;
+        font-size: 15px;
+        letter-spacing: 2px;
+        color: #ffffff;
+        font-weight: 300;
+        
+        /* 這裡改成了 8 秒，你可以根據喜好改成 6s 或 10s */
+        animation: breath 8s infinite ease-in-out;
+        
+        cursor: default; 
+        z-index: 10;
+        transition: all 0.8s; /* 顯現時的過渡也變慢 */
+        white-space: nowrap;
+    }
 
-        /* 找到並滑過去時的反應 */
-        #random-btn:hover {
-            animation: none; /* 停止呼吸動畫 */
-            opacity: 1 !important;
-            color: #fffa65; /* 變成亮黃色，提示成功 */
-            cursor: pointer;
-            text-shadow: 0 0 8px rgba(255, 250, 101, 0.8);
-        }
+    #random-btn:hover {
+        animation: none;
+        opacity: 1 !important;
+        color: #fff;
+        cursor: pointer;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        transform: scale(1.05);
+    }
     </style>
 </head>
 <body>
