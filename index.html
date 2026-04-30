@@ -5,101 +5,131 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>前往會員中心...</title>
     <style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        background-color: #000;
-        position: relative;
-    }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: #000; /* 黑邊區域 */
+            position: relative;
+        }
 
-    .image-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('BOT_TESTING.jpg'); 
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-        z-index: 1;
-        filter: brightness(90%);
-    }
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* 請替換成你的圖片網址 */
+            background-image: url('BOT_TESTING.jpg'); 
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+            filter: brightness(60%);
+        }
 
-    /* 緩慢的呼吸動畫 */
-    @keyframes breath {
-        0% { opacity: 0.05; }
-        50% { opacity: 0.25; } /* 最高亮度稍微調低一點，更神祕 */
-        100% { opacity: 0.05; }
-    }
+        @keyframes breath {
+            0% { opacity: 0.05; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.05; }
+        }
 
-    #random-btn {
-        position: absolute;
-        background: none;
-        border: none;
-        padding: 25px; /* 增加感應區，讓使用者比較好「撞到」它 */
-        margin: 0;
-        outline: none;
-        font-size: 15px;
-        letter-spacing: 2px;
-        color: #ffffff;
-        font-weight: 300;
-        
-        /* 這裡改成了 8 秒，你可以根據喜好改成 6s 或 10s */
-        animation: breath 8s infinite ease-in-out;
-        
-        cursor: default; 
-        z-index: 10;
-        transition: all 0.8s; /* 顯現時的過渡也變慢 */
-        white-space: nowrap;
-    }
+        #random-btn {
+            position: absolute;
+            background: none;
+            border: none;
+            padding: 25px;
+            margin: 0;
+            outline: none;
+            font-size: 15px;
+            letter-spacing: 2px;
+            color: #ffffff;
+            font-weight: 300;
+            animation: breath 10s infinite ease-in-out;
+            cursor: default; 
+            z-index: 10;
+            transition: all 0.8s;
+            white-space: nowrap;
+            /* 初始隱藏，等計算好位置後再顯示，避免閃爍 */
+            display: none; 
+        }
 
-    #random-btn:hover {
-        animation: none;
-        opacity: 1 !important;
-        color: #fff;
-        cursor: pointer;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        transform: scale(1.05);
-    }
+        #random-btn:hover {
+            animation: none;
+            opacity: 1 !important;
+            color: #fff;
+            cursor: pointer;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
     </style>
 </head>
 <body>
 
-    <div class="image-container"></div>
-    
-    <!-- 改用比較像按鈕但依然低調的文字 -->
-    <button id="random-btn" onclick="goToLink()">點擊跳轉</button>
+    <div class="image-container" id="bg-img"></div>
+    <button id="random-btn" onclick="goToLink()">Click</button>
 
     <script>
+        // 1. 先定義圖片的原始尺寸（這很重要，請填入你圖片的真實寬高）
+        // 如果不知道，程式碼下方有自動偵測的方法
+        const imgOriginalWidth = 1338; 
+        const imgOriginalHeight = 1176;
+
         function moveButton() {
             const btn = document.getElementById('random-btn');
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            
-            const btnWidth = btn.offsetWidth;
-            const btnHeight = btn.offsetHeight;
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
 
-            // 隨機位置限制（留出較寬的邊距，避免出現在死角）
-            const padding = 60; 
-            const maxX = windowWidth - btnWidth - padding;
-            const maxY = windowHeight - btnHeight - padding;
+            // 2. 計算 contain 模式下，圖片實際顯示的尺寸
+            const windowRatio = winW / winH;
+            const imageRatio = imgOriginalWidth / imgOriginalHeight;
 
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            let actualImgW, actualImgH, offsetX, offsetY;
 
+            if (windowRatio > imageRatio) {
+                // 視窗太寬，圖片高度撐滿，左右留黑邊
+                actualImgH = winH;
+                actualImgW = winH * imageRatio;
+                offsetX = (winW - actualImgW) / 2;
+                offsetY = 0;
+            } else {
+                // 視窗太窄，圖片寬度撐滿，上下留黑邊
+                actualImgW = winW;
+                actualImgH = winW / imageRatio;
+                offsetX = 0;
+                offsetY = (winH - actualImgH) / 2;
+            }
+
+            // 3. 在圖片實際區域內計算隨機位置
+            const padding = 40; // 距離圖片邊緣的距離
+            const btnW = btn.offsetWidth;
+            const btnH = btn.offsetHeight;
+
+            const randomX = offsetX + padding + Math.random() * (actualImgW - btnW - padding * 2);
+            const randomY = offsetY + padding + Math.random() * (actualImgH - btnH - padding * 2);
+
+            // 4. 套用位置並顯示
             btn.style.left = randomX + 'px';
             btn.style.top = randomY + 'px';
+            btn.style.display = 'block';
         }
 
         function goToLink() {
-            window.location.href = "https://www.swordofjustice.com/h5/20260424/vip/index.html?fbclid=IwRlRTSARb3G1leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeErhrdbC3ylNDOCI8LEmhOAIld-jiq2zq1-FYEqvCMK8JyaJRuMSZQpMPSxc_aem_I1-wJUTV50zS-5UqGKb8xA#/"; 
+            window.location.href = "https://www.google.com"; 
         }
 
-        window.onload = moveButton;
+        // 為了精確計算，我們等圖片載入後獲取其原始尺寸
+        const tempImg = new Image();
+        tempImg.src = "你的圖片網址.jpg"; // 這裡也要替換
+        tempImg.onload = function() {
+            // 這裡會自動抓取圖片的寬高，不需要手動填寫了
+            window.imgOriginalWidth = this.width;
+            window.imgOriginalHeight = this.height;
+            moveButton();
+        };
+
+        window.onresize = moveButton;
     </script>
 </body>
 </html>
