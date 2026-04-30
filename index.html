@@ -3,125 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>神秘連結</title>
+    <title>前往會員中心...</title>
     <style>
-        /* 基礎設定：鎖定視窗，隱藏捲軸 */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background-color: #ffffff; /* 圖片外的背景色 */
+            background-color: #000; /* 改為黑色背景增加氛圍 */
             position: relative;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* 圖片容器：等比例縮放 + 亮度 90% */
         .image-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('BOT_TESTING.jpg'); /* !!! 請替換成你的圖片網址 !!! */
+            background-image: url('BOT_TESTING.jpg'); 
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             z-index: 1;
-            
-            /* 設定亮度為 90% */
             filter: brightness(90%);
         }
 
-        /* 純文字按鈕樣式 */
+        /* 隱藏版按鈕樣式 */
         #random-btn {
             position: absolute;
             background: none;
             border: none;
-            padding: 10px; /* 增加點擊感應範圍 */
+            padding: 15px;
             margin: 0;
             outline: none;
             
-            /* 文字外觀 */
-            font-size: 22px;
-            font-weight: bold;
-            color: #333333; 
-            cursor: pointer;
+            /* 讓按鈕極度不明顯 */
+            font-size: 14px; /* 縮小字體 */
+            color: rgba(100, 100, 100, 0.3); /* 極淡的灰色，接近透明 */
+            opacity: 0.1; /* 初始透明度極低 */
+            
+            /* 移除「小手」指標，讓使用者不知道這裡有東西 */
+            cursor: default; 
+            
             z-index: 10;
-            
-            /* 讓文字在不同背景下都清晰的陰影 */
-            text-shadow: 1px 1px 3px rgba(255,255,255,0.8), -1px -1px 3px rgba(255,255,255,0.8);
-            
-            /* 動態效果 */
-            transition: color 0.2s, transform 0.2s;
-            white-space: nowrap; /* 避免文字換行 */
+            transition: opacity 0.5s, color 0.5s;
+            white-space: nowrap;
         }
 
-        /* 滑鼠懸停或手機觸碰效果 */
+        /* 當使用者「碰巧」滑過時才顯現 */
         #random-btn:hover {
-            color: #ff4757;
-            text-decoration: underline;
-            transform: scale(1.1);
-        }
-
-        /* 手機端特別優化：字體稍微加大 */
-        @media (max-width: 600px) {
-            #random-btn {
-                font-size: 26px;
-            }
+            opacity: 0.8;
+            color: #ffffff; /* 滑過時變白 */
+            text-decoration: none;
+            cursor: pointer; /* 找到後才顯示小手 */
         }
     </style>
 </head>
 <body>
 
-    <!-- 圖片層 -->
     <div class="image-container"></div>
     
-    <!-- 純文字隨機按鈕 -->
-    <button id="random-btn" onclick="goToLink()">這裡有一個神秘連結</button>
+    <!-- 這裡可以改一個更不起眼的文字 -->
+    <button id="random-btn" onclick="goToLink()">.</button>
 
     <script>
         function moveButton() {
             const btn = document.getElementById('random-btn');
-            
-            // 取得目前視窗的可用寬高
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
-
-            // 取得按鈕寬高
             const btnWidth = btn.offsetWidth;
             const btnHeight = btn.offsetHeight;
 
-            // 計算隨機座標，預留 20px 邊距避免貼邊
-            const padding = 20;
+            const padding = 50; // 增加邊距，避免出現在死角
             const maxX = windowWidth - btnWidth - padding;
             const maxY = windowHeight - btnHeight - padding;
 
-            // 確保亂數不為負數
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-            // 套用位置
             btn.style.left = randomX + 'px';
             btn.style.top = randomY + 'px';
         }
 
         function goToLink() {
-            // 跳轉網址
-            window.location.href = "https://www.swordofjustice.com/h5/20260424/vip/index.html?fbclid=IwRlRTSARb3G1leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeErhrdbC3ylNDOCI8LEmhOAIld-jiq2zq1-FYEqvCMK8JyaJRuMSZQpMPSxc_aem_I1-wJUTV50zS-5UqGKb8xA#/"; /* !!! 請替換成目的地網址 !!! */
+            window.location.href = "https://www.swordofjustice.com/h5/20260424/vip/index.html?fbclid=IwRlRTSARb3G1leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeErhrdbC3ylNDOCI8LEmhOAIld-jiq2zq1-FYEqvCMK8JyaJRuMSZQpMPSxc_aem_I1-wJUTV50zS-5UqGKb8xA#/"; 
         }
 
-        // 頁面加載完成後定位按鈕
         window.onload = moveButton;
-
-        // 當視窗大小改變時（如手機轉向）重新定位按鈕
-        let resizeTimer;
-        window.onresize = function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(moveButton, 200);
-        };
     </script>
-
 </body>
 </html>
