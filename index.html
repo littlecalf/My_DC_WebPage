@@ -1,50 +1,50 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>正在導向...</title>
-    <style>
-        /* 1. 基礎設定：確保背景乾淨並隱藏捲軸 */
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden; /* 確保不出現捲軸 */
-            background-color: #ffffff; /* 如果圖片沒填滿時的背景底色，可以改 #000 (黑) 或 #fff (白) */
-        }
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background-color: #f0f0f0;
+        position: relative;
+    }
 
-        /* 2. 圖片容器設定 */
-        .image-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+    .image-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('BOT_TESTING.jpg'); 
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 1;
 
-            /* 關鍵：使用背景圖處理 */
-            background-image: url('BOT_TESTING.jpg');
-            
-            /* 關鍵：使用 contain 確保圖片「完整顯示」不被裁切且等比例 */
-            background-size: contain; 
-            
-            /* 讓圖片在畫面正中央 */
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-    </style>
-</head>
-<body>
+        /* --- 加入這行來調整亮度 --- */
+        filter: brightness(90%); 
+    }
 
-    <div class="image-container"></div>
+    /* 按鈕樣式維持不變 */
+    #random-btn {
+        position: absolute;
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        font-size: 20px;
+        font-weight: bold;
+        color: #333; 
+        cursor: pointer;
+        z-index: 10;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        transition: color 0.2s, transform 0.2s;
+    }
 
-    <script>
-        // 設定 3 秒後自動跳轉
-        setTimeout(function() {
-            window.location.href = "https://www.swordofjustice.com/h5/20260424/vip/index.html?fbclid=IwRlRTSARb3G1leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeErhrdbC3ylNDOCI8LEmhOAIld-jiq2zq1-FYEqvCMK8JyaJRuMSZQpMPSxc_aem_I1-wJUTV50zS-5UqGKb8xA#/"; // 目的地網址
-        }, 1000); 
-    </script>
-
-</body>
-</html>
+    #random-btn:hover {
+        color: #ff4757;
+        text-decoration: underline;
+        transform: scale(1.1);
+    }
+</style>
