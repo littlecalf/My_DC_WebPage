@@ -2,21 +2,47 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>正在導向...</title>
     <style>
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
-        img { max-width: 100%; height: auto; }
+        /* 1. 基礎設定：確保背景乾淨並隱藏捲軸 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* 確保不出現捲軸 */
+            background-color: #ffffff; /* 如果圖片沒填滿時的背景底色，可以改 #000 (黑) 或 #fff (白) */
+        }
+
+        /* 2. 圖片容器設定 */
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            /* 關鍵：使用背景圖處理 */
+            background-image: url('BOT_TESTING.jpg');
+            
+            /* 關鍵：使用 contain 確保圖片「完整顯示」不被裁切且等比例 */
+            background-size: contain; 
+            
+            /* 讓圖片在畫面正中央 */
+            background-position: center;
+            background-repeat: no-repeat;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 這裡放置你的圖片位址 -->
-    <img src="BOT_TESTING.jpg" alt="Loading...">
+    <div class="image-container"></div>
 
     <script>
-        // 設定 3000 毫秒 (即 3 秒) 後執行跳轉
+        // 設定 3 秒後自動跳轉
         setTimeout(function() {
-            window.location.href = "https://www.google.com"; // 目的地網址
+            window.location.href = "https://project.sparktech.io/"; // 目的地網址
         }, 3000); 
     </script>
 
