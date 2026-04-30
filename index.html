@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>前往會員中心...</title>
+    <title>Find the Hidden Key</title>
     <style>
         body, html {
             margin: 0;
@@ -11,7 +11,7 @@
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background-color: #000; /* 改為黑色背景增加氛圍 */
+            background-color: #000;
             position: relative;
         }
 
@@ -29,34 +29,44 @@
             filter: brightness(90%);
         }
 
-        /* 隱藏版按鈕樣式 */
+        /* 呼吸燈動畫：從幾乎看不見到微弱可見 */
+        @keyframes breath {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0.1; }
+        }
+
+        /* 彩蛋按鈕樣式 */
         #random-btn {
             position: absolute;
             background: none;
             border: none;
-            padding: 15px;
+            padding: 20px; /* 增加點擊區域感應 */
             margin: 0;
             outline: none;
             
-            /* 讓按鈕極度不明顯 */
-            font-size: 14px; /* 縮小字體 */
-            color: rgba(100, 100, 100, 0.3); /* 極淡的灰色，接近透明 */
-            opacity: 0.1; /* 初始透明度極低 */
+            /* 文字設定 */
+            font-size: 16px;
+            letter-spacing: 1px;
+            color: #ffffff;
+            font-weight: 300;
             
-            /* 移除「小手」指標，讓使用者不知道這裡有東西 */
+            /* 套用動畫：每 3 秒循環一次 */
+            animation: breath 3s infinite ease-in-out;
+            
             cursor: default; 
-            
             z-index: 10;
-            transition: opacity 0.5s, color 0.5s;
+            transition: all 0.3s;
             white-space: nowrap;
         }
 
-        /* 當使用者「碰巧」滑過時才顯現 */
+        /* 找到並滑過去時的反應 */
         #random-btn:hover {
-            opacity: 0.8;
-            color: #ffffff; /* 滑過時變白 */
-            text-decoration: none;
-            cursor: pointer; /* 找到後才顯示小手 */
+            animation: none; /* 停止呼吸動畫 */
+            opacity: 1 !important;
+            color: #fffa65; /* 變成亮黃色，提示成功 */
+            cursor: pointer;
+            text-shadow: 0 0 8px rgba(255, 250, 101, 0.8);
         }
     </style>
 </head>
@@ -64,18 +74,20 @@
 
     <div class="image-container"></div>
     
-    <!-- 這裡可以改一個更不起眼的文字 -->
-    <button id="random-btn" onclick="goToLink()">.</button>
+    <!-- 改用比較像按鈕但依然低調的文字 -->
+    <button id="random-btn" onclick="goToLink()">Click</button>
 
     <script>
         function moveButton() {
             const btn = document.getElementById('random-btn');
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
+            
             const btnWidth = btn.offsetWidth;
             const btnHeight = btn.offsetHeight;
 
-            const padding = 50; // 增加邊距，避免出現在死角
+            // 隨機位置限制（留出較寬的邊距，避免出現在死角）
+            const padding = 60; 
             const maxX = windowWidth - btnWidth - padding;
             const maxY = windowHeight - btnHeight - padding;
 
@@ -87,7 +99,7 @@
         }
 
         function goToLink() {
-            window.location.href = "https://www.swordofjustice.com/h5/20260424/vip/index.html?fbclid=IwRlRTSARb3G1leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeErhrdbC3ylNDOCI8LEmhOAIld-jiq2zq1-FYEqvCMK8JyaJRuMSZQpMPSxc_aem_I1-wJUTV50zS-5UqGKb8xA#/"; 
+            window.location.href = "https://www.google.com"; 
         }
 
         window.onload = moveButton;
